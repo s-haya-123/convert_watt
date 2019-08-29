@@ -29,55 +29,51 @@ class _watHomePage extends StatelessWidget {
     return elements1
         .map((val) => MySelectionItem(
       title: val,
+      isForList: false,
     ))
         .toList();
   }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('title'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(15.0),
-        child: Center(
-          child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(left: 10.0),
-                  child: Text(
-                    "To which meal?",
-                    style: TextStyle(
-                        color: Colors.grey, fontWeight: FontWeight.w500),
-                  ),
-                ),
-                DirectSelect(
-                    itemExtent: 35.0,
-                    selectedIndex: 0,
-                    child: MySelectionItem(
-                      isForList: false,
-                      title: elements1[0],
-                    ),
-                    onSelectedItemChanged: (index) {
-//                      setState(() {
-//                        selectedIndex1 = index;
-//                      });
-                    },
-                    items: _buildItems1()),
-                Padding(
-                  padding: const EdgeInsets.only(left: 10.0, top: 20.0),
-                  child: Text(
-                    "Search our database by name",
-                    style: TextStyle(
-                        color: Colors.grey, fontWeight: FontWeight.w500),
-                  ),
-                ),
-              ]),
-        ),
-      ),
-    );
+    return
+      ScopedModelDescendant<WattModel>(
+        builder: (context,child,model) {
+          return Scaffold(
+            appBar: AppBar(
+              title: Text('title'),
+            ),
+            body: Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: Center(
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10.0),
+                        child: Text(
+                          "あなたの家の電子レンジ",
+                          style: TextStyle(
+                              color: Colors.black, fontWeight: FontWeight.w500),
+                        ),
+                      ),
+                      DirectSelect(
+                          itemExtent: 30.0,
+                          selectedIndex: model.myWattIndex,
+                          child: MySelectionItem(
+                            isForList: true,
+                            title: elements1[model.myWattIndex],
+                          ),
+                          onSelectedItemChanged: (index) {
+                            model.myWattIndex = index;
+                          },
+                          items: _buildItems1()),
+                    ]),
+              ),
+            ),
+          );
+        }
+      );
   }
 }
 
@@ -95,7 +91,7 @@ class MySelectionItem extends StatelessWidget {
       child: isForList
           ? Padding(
         child: _buildItem(context),
-        padding: EdgeInsets.all(10.0),
+        padding: EdgeInsets.all(20.0),
       )
           : Card(
         margin: EdgeInsets.symmetric(horizontal: 10.0),
