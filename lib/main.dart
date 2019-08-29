@@ -65,7 +65,7 @@ class _watHomePage extends StatelessWidget {
                             title: elements1[model.myWattIndex],
                           ),
                           onSelectedItemChanged: (index) {
-                            model.myWattIndex = index;
+                            model.selectMywat(index);
                           },
                           items: _buildItems1()),
                     ]),
