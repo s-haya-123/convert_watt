@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:convert_watt/wattModel.dart';
-import 'package:direct_select/direct_select.dart';
 
 void main() => runApp(MyApp());
 
@@ -10,7 +9,6 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -20,13 +18,8 @@ class MyApp extends StatelessWidget {
 }
 
 class _watHomePage extends StatelessWidget {
-  final elements1 = [
-    "5ooW",
-    "600W",
-    "700W",
-  ];
-  List<Widget> _buildItems1() {
-    return elements1
+  List<Widget> _buildList(List element) {
+    return element
         .map((val) => MySelectionItem(
       title: val,
       isForList: false,
@@ -40,7 +33,14 @@ class _watHomePage extends StatelessWidget {
         builder: (context,child,model) {
           return Scaffold(
             appBar: AppBar(
-              title: Text('title'),
+              title: Text('家の電子レンジだと何分？'),
+            ),
+            floatingActionButton: FloatingActionButton(
+              onPressed: () {
+                // Add your onPressed code here!
+              },
+              child: Icon(Icons.timer,size: 35),
+              backgroundColor: Colors.amber,
             ),
             body: Padding(
               padding: const EdgeInsets.all(15.0),
@@ -57,17 +57,125 @@ class _watHomePage extends StatelessWidget {
                               color: Colors.black, fontWeight: FontWeight.w500),
                         ),
                       ),
-                      DirectSelect(
-                          itemExtent: 30.0,
-                          selectedIndex: model.myWattIndex,
-                          child: MySelectionItem(
-                            isForList: true,
-                            title: elements1[model.myWattIndex],
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Center(
+                              child: DropdownButton<String>(
+                                  value: model.myWat,
+                                  onChanged: (wat) {
+                                    model.setMyWat(wat);
+                                  },
+                                  items: model.watList
+                                      .map<DropdownMenuItem<String>>((String value) {
+                                    return DropdownMenuItem<String>(
+                                      value: value,
+                                      child: Text(value, style: TextStyle(fontSize: 30)),
+                                    );
+                                  }).toList()),
+                            ),
+                            Text(
+                                'W'
+                            )
+                          ]
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10.0),
+                        child: Text(
+                          "商品のワット数",
+                          style: TextStyle(
+                              color: Colors.black, fontWeight: FontWeight.w500),
+                        ),
+                      ),
+                      Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Center(
+                              child: DropdownButton<String>(
+                                  value: model.targetWat,
+                                  onChanged: (wat) {
+                                    model.setTargetWat(wat);
+                                  },
+                                  items: model.watList
+                                      .map<DropdownMenuItem<String>>((String value) {
+                                    return DropdownMenuItem<String>(
+                                      value: value,
+                                      child: Text(value, style: TextStyle(fontSize: 30)),
+                                    );
+                                  }).toList()),
+                            ),
+                            Text(
+                              'W'
+                            )
+                          ]
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10.0),
+                        child: Text(
+                          "温める時間",
+                          style: TextStyle(
+                              color: Colors.black, fontWeight: FontWeight.w500),
+                        ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Padding(
+                              padding: const EdgeInsets.only(left: 100.0),
+                              child: DropdownButton<String>(
+                                  value: model.targetMinute,
+                                  onChanged: (minute) {
+                                    model.setMinute(minute);
+                                  },
+                                  items: model.minutes
+                                      .map<DropdownMenuItem<String>>((String value) {
+                                    return DropdownMenuItem<String>(
+                                      value: value,
+                                      child: Text(value, style: TextStyle(fontSize: 30)),
+                                    );
+                                  }).toList())
                           ),
-                          onSelectedItemChanged: (index) {
-                            model.selectMywat(index);
-                          },
-                          items: _buildItems1()),
+                          Text(
+                            '分'
+                          ),
+                          Padding(
+                              padding: const EdgeInsets.only(left: 100.0),
+                              child: DropdownButton<String>(
+                                  value: model.targetSecond,
+                                  onChanged: (second) {
+                                    model.setSecond(second);
+                                  },
+                                  items: model.seconds
+                                      .map<DropdownMenuItem<String>>((String value) {
+                                    return DropdownMenuItem<String>(
+                                      value: value,
+                                      child: Text(value, style: TextStyle(fontSize: 30)),
+                                    );
+                                  }).toList())
+                          ),
+                          Text(
+                              '秒'
+                          )
+                        ],
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10.0),
+                        child: Text(
+                          "あなたが設定する時間",
+                          style: TextStyle(
+                              color: Colors.black, fontWeight: FontWeight.w500),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 30.0),
+                        child: Text(
+                          "${model.myMinute}分      ${model.mySecond}秒",
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.w600,
+                            fontSize: 50,
+                        ),)
+                      ),
                     ]),
               ),
             ),
