@@ -26,6 +26,7 @@ dependencies:
   scoped_model: ^0.3.0
   direct_select_flutter: ^1.0.4
   direct_select: ^1.0.0
+  vibration: 1.2.1
 
 dev_dependencies:
   flutter_test:

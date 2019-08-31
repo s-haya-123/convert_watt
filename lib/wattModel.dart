@@ -1,5 +1,6 @@
 import 'package:scoped_model/scoped_model.dart';
 import 'dart:async';
+import 'package:vibration/vibration.dart';
 
 class WattModel extends Model {
   String myWat = '700';
@@ -9,13 +10,14 @@ class WattModel extends Model {
   String myMinute = '0';
   String mySecond = '0';
   double time = 0;
+  bool _isStartTimer = false;
 
   final watList = [
     '500',
     '600',
     '700',
   ];
-  final minutes = new List<String>.generate(9, (i)=>(i).toString());
+  final minutes = new List<String>.generate(10, (i)=>(i).toString());
   final seconds = new List<String>.generate(60, (i)=>i.toString());
 
   void setMyWat(String wat) {
@@ -49,15 +51,20 @@ class WattModel extends Model {
     this.mySecond = (time % 60).floor().toString();
   }
   void startTimer() {
-    const oneSec = const Duration(seconds:1);
-    new Timer.periodic(oneSec, (Timer t) {
-      if(this.time > 1) {
-      this.time--;
-      setTargetTime(this.time);
-      this.notifyListeners();
-      } else {
-        t.cancel();
-      }
-    });
+    if(!this._isStartTimer) {
+      this._isStartTimer = true;
+      const oneSec = const Duration(seconds:1);
+      new Timer.periodic(oneSec, (Timer t) {
+        if(this.time > 1) {
+          this.time--;
+          setTargetTime(this.time);
+          this.notifyListeners();
+        } else {
+          t.cancel();
+          Vibration.vibrate(duration: 3000);
+          this._isStartTimer = false;
+        }
+      });
+    }
   }
 }
