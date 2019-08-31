@@ -37,7 +37,7 @@ class _watHomePage extends StatelessWidget {
             ),
             floatingActionButton: FloatingActionButton(
               onPressed: () {
-                // Add your onPressed code here!
+                model.startTimer();
               },
               child: Icon(Icons.timer,size: 35),
               backgroundColor: Colors.amber,

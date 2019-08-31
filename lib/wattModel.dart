@@ -1,4 +1,5 @@
 import 'package:scoped_model/scoped_model.dart';
+import 'dart:async';
 
 class WattModel extends Model {
   String myWat = '700';
@@ -7,6 +8,7 @@ class WattModel extends Model {
   String targetSecond = '0';
   String myMinute = '0';
   String mySecond = '0';
+  double time = 0;
 
   final watList = [
     '500',
@@ -39,8 +41,23 @@ class WattModel extends Model {
 
   void calcTargetTime() {
     final energy = (int.parse(this.targetSecond) + int.parse(this.targetMinute) * 60) * int.parse(this.targetWat);
-    final targetEnergy = energy / int.parse(this.myWat);
-    this.myMinute = (targetEnergy / 60).floor().toString();
-    this.mySecond = (targetEnergy % 60).floor().toString();
+    this.time = energy / int.parse(this.myWat);
+    setTargetTime(this.time);
+  }
+  void setTargetTime(double time) {
+    this.myMinute = (time / 60).floor().toString();
+    this.mySecond = (time % 60).floor().toString();
+  }
+  void startTimer() {
+    const oneSec = const Duration(seconds:1);
+    new Timer.periodic(oneSec, (Timer t) {
+      if(this.time > 1) {
+      this.time--;
+      setTargetTime(this.time);
+      this.notifyListeners();
+      } else {
+        t.cancel();
+      }
+    });
   }
 }
