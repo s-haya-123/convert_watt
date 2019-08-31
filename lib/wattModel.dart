@@ -11,6 +11,7 @@ class WattModel extends Model {
   String mySecond = '0';
   double time = 0;
   bool isStartTimer = false;
+  Timer _timer;
 
   final watList = [
     '500',
@@ -53,8 +54,8 @@ class WattModel extends Model {
   void startTimer() {
     if(!this.isStartTimer) {
       this.isStartTimer = true;
-      const oneSec = const Duration(seconds:1);
-      new Timer.periodic(oneSec, (Timer t) {
+      new Timer.periodic(Duration(seconds:1), (Timer t) {
+        this._timer = t;
         if(this.time > 1) {
           this.time--;
           setTargetTime(this.time);
@@ -66,6 +67,10 @@ class WattModel extends Model {
           notifyListeners();
         }
       });
+    } else {
+      this._timer.cancel();
+      this.isStartTimer = false;
     }
+    notifyListeners();
   }
 }
