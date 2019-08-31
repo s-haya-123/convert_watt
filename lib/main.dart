@@ -18,14 +18,6 @@ class MyApp extends StatelessWidget {
 }
 
 class _watHomePage extends StatelessWidget {
-  List<Widget> _buildList(List element) {
-    return element
-        .map((val) => MySelectionItem(
-      title: val,
-      isForList: false,
-    ))
-        .toList();
-  }
   @override
   Widget build(BuildContext context) {
     return
@@ -39,8 +31,8 @@ class _watHomePage extends StatelessWidget {
               onPressed: () {
                 model.startTimer();
               },
-              child: Icon(Icons.timer,size: 35),
-              backgroundColor: Colors.amber,
+              child: Icon( !model.isStartTimer ? Icons.timer : Icons.cancel,size: 35),
+              backgroundColor: !model.isStartTimer ? Colors.amber : Colors.red,
             ),
             body: Padding(
               padding: const EdgeInsets.all(15.0),
@@ -185,43 +177,71 @@ class _watHomePage extends StatelessWidget {
   }
 }
 
-class MySelectionItem extends StatelessWidget {
-  final String title;
-  final bool isForList;
+class FancyFab extends StatefulWidget {
+  @override
+  _FancyFabState createState() => _FancyFabState();
+}
 
-  const MySelectionItem({Key key, this.title, this.isForList = true})
-      : super(key: key);
+class _FancyFabState extends State<FancyFab>
+    with SingleTickerProviderStateMixin {
+  bool isOpened = false;
+  AnimationController _animationController;
+  Animation<Color> _animateColor;
+  Animation<double> _animateIcon;
+  Curve _curve = Curves.easeOut;
 
   @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 60.0,
-      child: isForList
-          ? Padding(
-        child: _buildItem(context),
-        padding: EdgeInsets.all(20.0),
-      )
-          : Card(
-        margin: EdgeInsets.symmetric(horizontal: 10.0),
-        child: Stack(
-          children: <Widget>[
-            _buildItem(context),
-            Align(
-              alignment: Alignment.centerRight,
-              child: Icon(Icons.arrow_drop_down),
-            )
-          ],
-        ),
+  initState() {
+    _animationController =
+    AnimationController(vsync: this, duration: Duration(milliseconds: 500))
+      ..addListener(() {
+        setState(() {});
+      });
+    _animateIcon =
+        Tween<double>(begin: 0.0, end: 1.0).animate(_animationController);
+    _animateColor = ColorTween(
+      begin: Colors.blue,
+      end: Colors.red,
+    ).animate(CurvedAnimation(
+      parent: _animationController,
+      curve: Interval(
+        0.00,
+        1.00,
+        curve: _curve,
+      ),
+    ));
+    super.initState();
+  }
+
+  @override
+  dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
+  animate() {
+    if (!isOpened) {
+      _animationController.forward();
+    } else {
+      _animationController.reverse();
+    }
+    isOpened = !isOpened;
+  }
+
+  Widget toggle() {
+    return FloatingActionButton(
+      backgroundColor: _animateColor.value,
+      onPressed: animate,
+      tooltip: 'Toggle',
+      child: AnimatedIcon(
+        icon: AnimatedIcons.menu_close,
+        progress: _animateIcon,
       ),
     );
   }
 
-  _buildItem(BuildContext context) {
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      alignment: Alignment.center,
-      child: Text(title),
-    );
+  @override
+  Widget build(BuildContext context) {
+    return toggle();
   }
 }
-
