@@ -50,7 +50,7 @@ class _watHomePage extends StatelessWidget {
                         ),
                       ),
                       Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.end,
                           children: <Widget>[
                             Center(
                               child: DropdownButton<String>(
@@ -81,7 +81,7 @@ class _watHomePage extends StatelessWidget {
                         ),
                       ),
                       Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.end,
                           children: <Widget>[
                             Center(
                               child: DropdownButton<String>(
