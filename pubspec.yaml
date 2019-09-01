@@ -27,6 +27,7 @@ dependencies:
   direct_select_flutter: ^1.0.4
   direct_select: ^1.0.0
   vibration: 1.2.1
+  firebase_admob: 0.9.0
 
 dev_dependencies:
   flutter_test:

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:convert_watt/wattModel.dart';
+import 'package:firebase_admob/firebase_admob.dart';
 
 void main() => runApp(MyApp());
 
@@ -20,6 +21,33 @@ class MyApp extends StatelessWidget {
 class _watHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    FirebaseAdMob.instance.initialize(appId: 'ca-app-pub-1457109199282503~1387247486');
+    MobileAdTargetingInfo targetingInfo = MobileAdTargetingInfo(
+      keywords: <String>['flutterio', 'beautiful apps'],
+      contentUrl: 'https://flutter.io',
+      birthday: DateTime.now(),
+      childDirected: false,
+      designedForFamilies: false,
+      gender: MobileAdGender.male, // or female, unknown
+      testDevices: <String>[], // Android emulators are considered test devices
+    );
+
+    BannerAd myBanner = BannerAd(
+      adUnitId: BannerAd.testAdUnitId,
+      size: AdSize.smartBanner,
+      targetingInfo: targetingInfo,
+      listener: (MobileAdEvent event) {
+        // 広告の読み込みが完了
+        print("BannerAd event is $event");
+      },
+    );
+    myBanner
+      ..load()
+      ..show(
+        // ボトムからのオフセットで表示位置を決定
+        anchorOffset: 0.0,
+        anchorType: AnchorType.bottom,
+      );
     return
       ScopedModelDescendant<WattModel>(
         builder: (context,child,model) {
@@ -27,12 +55,15 @@ class _watHomePage extends StatelessWidget {
             appBar: AppBar(
               title: Text('家の電子レンジだと何分？'),
             ),
-            floatingActionButton: FloatingActionButton(
-              onPressed: () {
-                model.startTimer();
-              },
-              child: Icon( !model.isStartTimer ? Icons.timer : Icons.cancel,size: 35),
-              backgroundColor: !model.isStartTimer ? Colors.amber : Colors.red,
+            floatingActionButton: Container(
+              margin: EdgeInsets.only(bottom: 80),
+              child: FloatingActionButton(
+                onPressed: () {
+                  model.startTimer();
+                },
+                child: Icon( !model.isStartTimer ? Icons.timer : Icons.cancel,size: 35),
+                backgroundColor: !model.isStartTimer ? Colors.amber : Colors.red,
+              ),
             ),
             body: Padding(
               padding: const EdgeInsets.all(15.0),
@@ -181,4 +212,6 @@ class _watHomePage extends StatelessWidget {
         }
       );
   }
+
 }
+
