@@ -33,7 +33,7 @@ class _watHomePage extends StatelessWidget {
     );
 
     BannerAd myBanner = BannerAd(
-      adUnitId: BannerAd.testAdUnitId,
+      adUnitId: 'ca-app-pub-1457109199282503/2465606698',//BannerAd.testAdUnitId,
       size: AdSize.smartBanner,
       targetingInfo: targetingInfo,
       listener: (MobileAdEvent event) {
@@ -44,7 +44,6 @@ class _watHomePage extends StatelessWidget {
     myBanner
       ..load()
       ..show(
-        // ボトムからのオフセットで表示位置を決定
         anchorOffset: 0.0,
         anchorType: AnchorType.bottom,
       );

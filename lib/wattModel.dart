@@ -56,11 +56,14 @@ class WattModel extends Model {
       this.isStartTimer = true;
       new Timer.periodic(Duration(seconds:1), (Timer t) {
         this._timer = t;
-        if(this.time > 1) {
+        if(this.time > 1 && this.isStartTimer) {
           this.time--;
           setTargetTime(this.time);
           this.notifyListeners();
-        } else {
+        } else if(!this.isStartTimer) {
+          t.cancel();
+          notifyListeners();
+        }else {
           t.cancel();
           Vibration.vibrate(duration: 3000);
           this.isStartTimer = false;
