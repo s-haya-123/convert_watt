@@ -19,7 +19,7 @@ class WattModel extends Model {
     '700',
   ];
   final minutes = new List<String>.generate(10, (i)=>(i).toString());
-  final seconds = new List<String>.generate(60, (i)=>i.toString());
+  final seconds = new List<String>.generate(12, (i)=>(i*5).toString());
 
   void setMyWat(String wat) {
     this.myWat = wat;
